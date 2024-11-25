@@ -25,6 +25,7 @@ namespace AutoMagazines.Controllers
         public IActionResult Checkout(Order order)
         {
             shopCart.ListShopItems = shopCart.GetShopItems();
+            Console.WriteLine(shopCart.ListShopItems.Count);    
             if (shopCart.ListShopItems.Count == 0)
             {
                 ModelState.AddModelError("", "Должны быть товары");

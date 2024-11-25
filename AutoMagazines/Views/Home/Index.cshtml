@@ -2,10 +2,10 @@
 <h2>@Model.PageName</h2>
 
 <div class="row">
-    <div class="col col-md-2">
+    <div class="col col-md-3">
         @await Component.InvokeAsync("NavigationMenu")
     </div>
-    <div class="col col-md-10">
+    <div class="col col-md-10" >
         <div page-model="@Model.PagingInfo" page-action="Index"
              page-classes-enabled="true"
              page-class="btn" page-class-normal="btn-default"
@@ -15,8 +15,8 @@
             @{
                 foreach (var car in Model.Cars)
                 {
-                    <div class="col-lg-4">
-                        <img style="width: 350px" src="@car.Img" />
+                    <div class="col-lg-4" >
+                        <img style="width: 100%; border-radius:20px; height:180px" src="@car.Img" />
                         <h2>@car.Name</h2>
                         <p>@car.ShortDesc</p>
                         <p>Цена: @car.Price.ToString("c")</p>

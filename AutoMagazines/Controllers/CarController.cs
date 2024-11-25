@@ -75,23 +75,36 @@ namespace AutoMagazines.Controllers
         [HttpPost]
         public async Task<IActionResult> EditCar(Car car, IFormFile uploadedFile)
         {
+            // Получаем существующий объект из базы данных
+            var existingCar = await db.CarTable.FindAsync(car.CarId);
+            if (existingCar == null)
+            {
+                return NotFound();
+            }
+
+            // Если файл загружен, обновляем фотографию
             if (uploadedFile != null)
             {
-                //сформировали путь к файлу
                 string path = $"/img/{uploadedFile.FileName}";
                 car.Img = path;
-                //сохраняем файл в папку на сервере
                 using (var filestream = new FileStream(env.WebRootPath + path, FileMode.Create))
                 {
                     await uploadedFile.CopyToAsync(filestream);
                 }
             }
+            else
+            {
+                // Если файл не загружен, сохраняем старую фотографию
+                car.Img = existingCar.Img;
+            }
 
-            db.Entry(car).State = EntityState.Modified;
+            // Обновляем данные автомобиля
+            db.Entry(existingCar).CurrentValues.SetValues(car);
             await db.SaveChangesAsync();
 
             return RedirectToAction("CarList");
         }
+
 
         public IActionResult DeleteCar(int? carId)
         {

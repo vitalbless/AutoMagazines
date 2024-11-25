@@ -15,24 +15,32 @@ namespace AutoMagazines.Controllers
         {
             db = context;
         }
-        public IActionResult Index(int catId = 1, int page = 1)
+        public IActionResult Index(int? catId = null, int page = 1)
         {
             ViewBag.Title = "Главная страница";
+
+            var carsQuery = db.CarTable.AsQueryable();
+
+            if (catId.HasValue)
+            {
+                carsQuery = carsQuery.Where(c => c.CategoryId == catId.Value);
+            }
 
             return View(
                 new HomeIndexViewModel
                 {
-                    PageName = "Все автомобили",
+                    PageName = catId.HasValue ? "Автомобили категории" : "Все автомобили",
                     PagingInfo = new PagingInfo
                     {
                         CurrentPage = page,
                         ItemsPerPage = pageSize,
-                        TotalItems = db.CarTable.Where(c => c.CategoryId == catId).Count()
+                        TotalItems = carsQuery.Count()
                     },
-                    Cars = db.CarTable.Where(p => p.CategoryId == catId).OrderBy(c => c.CarId).Skip((page - 1) * pageSize).Take(pageSize),
-                    CurrentCategory = catId
+                    Cars = carsQuery.OrderBy(c => c.CarId).Skip((page - 1) * pageSize).Take(pageSize),
+                    CurrentCategory = catId ?? 0
                 }
             );
         }
+
     }
 }
