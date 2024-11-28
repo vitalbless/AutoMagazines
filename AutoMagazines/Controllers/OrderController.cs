@@ -18,25 +18,33 @@ namespace AutoMagazines.Controllers
 
         public IActionResult Checkout()
         {
+            shopCart.ListShopItems = shopCart.GetShopItems();
+            ViewBag.CartItems = shopCart.ListShopItems;
             return View();
         }
 
+
+      
         [HttpPost]
         public IActionResult Checkout(Order order)
         {
-            shopCart.ListShopItems = shopCart.GetShopItems();
-            Console.WriteLine(shopCart.ListShopItems.Count);    
+            shopCart.ListShopItems = shopCart.GetShopItems(); // Загрузить товары из корзины
+            ViewBag.CartItems = shopCart.ListShopItems; // Повторно передать в ViewBag
+
             if (shopCart.ListShopItems.Count == 0)
             {
-                ModelState.AddModelError("", "Должны быть товары");
+                ModelState.AddModelError("", "Корзина пуста. Добавьте товары перед оформлением заказа.");
             }
+
             if (ModelState.IsValid)
             {
                 CreateOrder(order);
                 return RedirectToAction("Complete");
             }
+
             return View(order);
         }
+
 
         public IActionResult Complete()
         {

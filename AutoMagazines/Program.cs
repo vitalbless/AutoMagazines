@@ -12,7 +12,13 @@ builder.Services.AddDbContext<StoreContext>(options =>
 builder.Services.AddControllersWithViews();
 
 // Включение сессий
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Работает только по HTTPS
+    options.Cookie.SameSite = SameSiteMode.Lax; // Используется Lax или Strict для SameSite
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Установите желаемое время жизни сессии
+});
+
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Регистрация корзины как scoped-сервиса
@@ -41,7 +47,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); // Редирект с HTTP на HTTPS
 app.UseStaticFiles();
 
 app.UseRouting();
