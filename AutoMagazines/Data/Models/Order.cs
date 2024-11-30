@@ -21,7 +21,6 @@ namespace AutoMagazines.Data.Models
         public string Adress { get; set; }
         [Display(Name = "Номер телефона")]
         [StringLength(11)]
-        [DataType(DataType.PhoneNumber)]
         [Required(ErrorMessage = "Вы не ввели номер")]
         public string Phone { get; set; }
         [Display(Name = "E-mail")]
@@ -32,6 +31,6 @@ namespace AutoMagazines.Data.Models
         [BindNever]
         [ScaffoldColumn(false)]//указывается для системных полей, которые не отображаются
         public DateTime OrderTime { get; set; }
-        public List<OrderDetail> OrderDetail { get; set; }
+        public List<OrderDetail>? OrderDetail { get; set; }
     }
 }

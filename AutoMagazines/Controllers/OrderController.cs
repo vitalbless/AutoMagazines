@@ -41,6 +41,7 @@ namespace AutoMagazines.Controllers
                 CreateOrder(order);
                 return RedirectToAction("Complete");
             }
+            var errors = ModelState.Values.SelectMany(v => v.Errors).ToList();
 
             return View(order);
         }
